@@ -25,8 +25,13 @@ export const auth = betterAuth({
     "mobile://",
     "exp://",
   ],
-  cookies: {
-    SameSite: "none",
+ advanced: {
+    crossOriginCookies: true,
+    defaultCookieAttributes: {
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "Lax",
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+    },
   },
   emailAndPassword: {
     enabled: true,
