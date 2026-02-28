@@ -89,13 +89,15 @@ export function KanbanBoard() {
         <div className="flex justify-center items-center">
           <button
             className="relative border border-red-500 bg-red-500 text-white bottom-0 m-9 px-2 py-1 rounded-lg"
-            onClick={() => queryClient.refetchQueries({ queryKey: ["get", "/api"] })}
+            onClick={() =>
+              queryClient.refetchQueries({ queryKey: ["get", "/api"] })
+            }
           >
             Try Again
           </button>
         </div>
       </div>
-    )
+    );
   }
 
   return (

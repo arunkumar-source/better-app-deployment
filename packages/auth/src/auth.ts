@@ -26,11 +26,7 @@ export const auth = betterAuth({
     "exp://",
   ],
   cookies: {
-    sessionToken: {
-      attributes: {
-        SameSite: "none",
-      },
-    },
+    SameSite: "none",
   },
   emailAndPassword: {
     enabled: true,

@@ -43,7 +43,7 @@ const corsOptions = cors({
     "exp://",
     "http://192.168.29.224:8081",
     "https://better-app-deployment-server.vercel.app",
-    "https://better-app-deployment-web.vercel.app"
+    "https://better-app-deployment-web.vercel.app",
   ],
   allowMethods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
   allowHeaders: ["Content-Type", "Authorization", "Cookie"],
@@ -212,7 +212,10 @@ app.get(
         description: "Greeting API",
       },
       servers: [
-        { url: "http://localhost:3000/api", description: "Local Server" },
+        {
+          url: "https://better-app-deployment-server.vercel.app/api",
+          description: "Local Server",
+        },
       ],
     },
   })
