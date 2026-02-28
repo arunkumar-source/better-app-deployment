@@ -20,7 +20,7 @@ export const auth = betterAuth({
   trustedOrigins: [
     "http://localhost:3000",
     "http://localhost:4000",
-    "https://better-app-deployment-server.vercel.app/",
+    "https://better-app-deployment-server.vercel.app",
     "mobile://",
     "exp://",
   ],

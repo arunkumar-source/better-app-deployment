@@ -42,6 +42,7 @@ const corsOptions = cors({
     "mobile://",
     "exp://",
     "http://192.168.29.224:8081",
+    "https://better-app-deployment-server.vercel.app",
   ],
   allowMethods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
   allowHeaders: ["Content-Type", "Authorization", "Cookie"],
@@ -51,8 +52,6 @@ const corsOptions = cors({
 
 // Apply CORS globally
 app.use("*", corsOptions);
-
-app.use("*", logger());
 
 // Handle preflight OPTIONS for /auth/*
 app.options("/auth/*", (c) => {
