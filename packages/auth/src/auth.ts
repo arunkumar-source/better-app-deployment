@@ -25,6 +25,10 @@ export const auth = betterAuth({
     "mobile://",
     "exp://",
   ],
+  cookies: {
+    sameSite: "none",
+    secure: true,
+  },
   emailAndPassword: {
     enabled: true,
   },
