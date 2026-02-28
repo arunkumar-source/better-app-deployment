@@ -43,6 +43,7 @@ const corsOptions = cors({
     "exp://",
     "http://192.168.29.224:8081",
     "https://better-app-deployment-server.vercel.app",
+    "https://better-app-deployment-web.vercel.app"
   ],
   allowMethods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
   allowHeaders: ["Content-Type", "Authorization", "Cookie"],
