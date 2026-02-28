@@ -28,6 +28,14 @@ export default function LoginPage() {
       <div className="w-100 rounded-xl bg-white p-8 shadow-md">
         <h2 className="mb-6 text-center font-bold text-2xl">Login</h2>
 
+        {form.formState.errors.root && (
+          <div className="mb-4 rounded-md bg-red-50 p-3">
+            <p className="text-red-500 text-sm">
+              {form.formState.errors.root.message}
+            </p>
+          </div>
+        )}
+
         <form className="space-y-4" onSubmit={onSubmit}>
           {/* EMAIL */}
           <div>
