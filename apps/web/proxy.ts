@@ -1,9 +1,11 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { auth } from "./lib/auth-client";
 
-export default function middleware(req: NextRequest) {
-  const token = req.cookies.get("__Secure-better-auth.session_token")?.value || 
-                req.cookies.get("better-auth.session_token")?.value;
+export default async function middleware(req: NextRequest) {
+  const token = await auth.getSession(undefined, {
+    headers: req.headers,
+  });
 
   const protectedRoutes = ["/AddWorkKanban", "/Dash"];
   const isProtected = protectedRoutes.some((r) =>
