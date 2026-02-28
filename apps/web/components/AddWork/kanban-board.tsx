@@ -3,6 +3,7 @@
 import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
 import type { Work } from "@repo/shared";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { $api } from "@/lib/api-client";
 import { KanbanColumn } from "./kanban-coloumn";
 
@@ -18,13 +19,12 @@ const COLUMNS: { id: WorkStatus; title: string }[] = [
 ];
 
 export function KanbanBoard() {
-  // ✅ GET /api
-  const { data: works = [], isLoading, refetch } = $api.useQuery("get", "/api");
+  const queryClient = useQueryClient();
 
-  // API now correctly returns an array of Work objects
+  const { data: works = [], isLoading, error } = $api.useQuery("get", "/api");
+
   const worksArray: Work[] = works;
 
-  // ✅ PATCH /api/update/{id}
   const { mutate: updateWork } = $api.useMutation("patch", "/api/update/{id}");
 
   const [updatingTaskId, setUpdatingTaskId] = useState<string | null>(null);
@@ -64,7 +64,7 @@ export function KanbanBoard() {
         },
         {
           onSuccess: () => {
-            refetch();
+            queryClient.invalidateQueries({ queryKey: ["get", "/api"] });
           },
           onSettled: () => {
             setUpdatingTaskId(null);
@@ -82,14 +82,21 @@ export function KanbanBoard() {
     );
   }
 
-  // if (error) {
-  //   return (
-  //     <div className="text-center text-red-500">
-  //       Failed to load tasks
-  //       <button onClick={() => refetch()}>Try Again</button>
-  //     </div>
-  //   )
-  // }
+  if (error) {
+    return (
+      <div className="text-center text-red-500">
+        Failed to load tasks
+        <div className="flex justify-center items-center">
+          <button
+            className="relative border border-red-500 bg-red-500 text-white bottom-0 m-9 px-2 py-1 rounded-lg"
+            onClick={() => queryClient.refetchQueries({ queryKey: ["get", "/api"] })}
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="relative min-h-[600px]">

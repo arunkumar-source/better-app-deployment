@@ -20,19 +20,10 @@ export const auth = betterAuth({
   trustedOrigins: [
     "http://localhost:3000",
     "http://localhost:4000",
+    "https://better-app-deployment-server.vercel.app/",
     "mobile://",
     "exp://",
   ],
-  // session: {
-  //   cookieCache: {
-  //     enabled: true,
-  //     maxAge: 5 * 60, // 5 minutes
-  //   },
-  //   cookiePrefix: "better-auth",
-  //   secureCookies: process.env.NODE_ENV === "production",
-  //   sameSite: "lax",
-  //   domain: process.env.NODE_ENV === "production" ? ".vercel.app" : undefined,
-  // },
   emailAndPassword: {
     enabled: true,
   },

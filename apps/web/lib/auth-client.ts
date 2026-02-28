@@ -1,6 +1,6 @@
 import { createAuthClient } from "better-auth/client";
 
 export const auth = createAuthClient({
-  baseURL: "http://localhost:4000/api/auth",
+  baseURL: "https://better-app-deployment-server.vercel.app/api/auth",
   credentials: "include",
 });
