@@ -4,7 +4,11 @@ import createClient from "openapi-react-query";
 
 const fetchClient = createFetchClient<paths>({
   baseUrl: "https://better-app-deployment-server.vercel.app",
-  credentials: "include",
+ fetch: (input: RequestInfo | URL, init?: RequestInit) =>
+    fetch(input, {
+      ...init,
+      credentials: "include",
+    }),
 });
 
 export const $api = createClient(fetchClient);
