@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+
+
+pnpm format
+echo "✅ Format check passed"
+
+pnpm lint
+echo "✅ Lint check passed"
+
+git add --update

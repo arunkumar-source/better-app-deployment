@@ -1,0 +1,14 @@
+{
+  "extends": "//",
+  "root": false,
+  "files": {
+    "ignoreUnknown": true,
+    "experimentalScannerIgnores": ["src/**/*"]
+  },
+  "linter": {
+    "enabled": false,
+    "rules": {
+      "recommended": false
+    }
+  }
+}

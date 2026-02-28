@@ -1,0 +1,15 @@
+{
+  "extends": "@workspace/typescript-config/base.json",
+
+  "compilerOptions": {
+    "module": "es2015",
+    "moduleResolution": "bundler",
+    "target": "es2022",
+    "lib": ["ES2022"],
+    "types": ["node"],
+    "noEmit": true,
+    "strictNullChecks": true
+  },
+  "include": ["src", "api"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -1,0 +1,35 @@
+appId: com.anonymous.mobile
+---
+- launchApp
+
+- tapOn: Email
+- inputText: arun@gmail.com
+- tapOn: Password
+- inputText: arun@123
+- tapOn: Login
+- tapOn: Add Work
+
+- tapOn: Enter title
+- inputText: add
+- tapOn: Enter description
+- inputText: test the coding
+- hideKeyboard
+- tapOn: Select Date
+- tapOn: "28"
+
+- tapOn: OK
+- tapOn:
+    text: Add Work
+    index: -1
+- tapOn: Delete
+- tapOn: DELETE
+- tapOn: Dashboard
+- swipe:
+    direction: UP
+- tapOn: Logout
+
+ 
+
+
+
+

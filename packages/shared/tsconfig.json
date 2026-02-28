@@ -1,0 +1,15 @@
+{
+  "extends": "@workspace/typescript-config/base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./",
+    "module": "es2015",
+    "moduleResolution": "bundler",
+    "moduleDetection": "auto",
+    "skipLibCheck": true,
+    "types": ["node"],
+    "strictNullChecks": true
+  },
+  "include": ["index.ts"],
+  "exclude": ["node_modules", "dist"]
+}
