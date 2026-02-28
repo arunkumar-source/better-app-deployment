@@ -61,7 +61,7 @@ app.options("/auth/*", (c) => {
 
 // Auth routes with CORS - mount under /api/auth/*
 app.options("/auth/*", (c) => c.body(null, 204)); // preflight handled
-app.all("/auth/*", (c) => auth.handler(c.req.raw)); // actual auth routes
+app.all("/auth/*", corsOptions, (c) => auth.handler(c.req.raw)); // actual auth routes with CORS
 
 // Protected routes for user works
 app.get(
