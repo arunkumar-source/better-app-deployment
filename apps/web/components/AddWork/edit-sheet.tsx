@@ -43,9 +43,13 @@ function formatDateForInputs(isoString?: string) {
 export function EditWorkSheet({
   work,
   children,
+  onOperationStart,
+  onOperationEnd,
 }: {
   work: Work;
   children: React.ReactNode;
+  onOperationStart?: () => void;
+  onOperationEnd?: () => void;
 }) {
   const queryClient = useQueryClient();
   const { mutateAsync: updateWork } = $api.useMutation(
@@ -68,8 +72,6 @@ export function EditWorkSheet({
 
   const onSubmit = handleSubmit(async (data) => {
     let finalEndDate: string | undefined;
-
-    // ✅ Convert local → UTC before saving
     if (data.endDate && data.endTime) {
       const localDate = new Date(`${data.endDate}T${data.endTime}:00`);
       finalEndDate = localDate.toISOString();
@@ -77,6 +79,8 @@ export function EditWorkSheet({
       const localDate = new Date(data.endDate);
       finalEndDate = localDate.toISOString();
     }
+
+    onOperationStart?.();
 
     await updateWork(
       {
@@ -93,6 +97,9 @@ export function EditWorkSheet({
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["get", "/api"] });
+        },
+        onSettled: () => {
+          onOperationEnd?.();
         },
       }
     );

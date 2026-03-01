@@ -9,11 +9,13 @@ import { WorkCard } from "@/components/AddWork/work-card";
 interface Props {
   status: string;
   title: string;
-  updatingTaskId?: string | null;
   works: Work[];
+  onOperationStart?: () => void;
+  onOperationEnd?: () => void;
+  isBoardLoading?: boolean;
 }
 
-export function KanbanColumn({ title, status, works, updatingTaskId }: Props) {
+export function KanbanColumn({ title, status, works, onOperationStart, onOperationEnd, isBoardLoading }: Props) {
   return (
     <Card className="flex h-full flex-col rounded-lg border border-gray-200 bg-white p-3 shadow-sm">
       <div className="mb-3 flex items-center justify-between">
@@ -49,9 +51,11 @@ export function KanbanColumn({ title, status, works, updatingTaskId }: Props) {
             {works.map((work, index) => (
               <WorkCard
                 index={index}
-                isUpdating={updatingTaskId === work.id}
                 key={work.id}
                 work={work}
+                onOperationStart={onOperationStart}
+                onOperationEnd={onOperationEnd}
+                isBoardLoading={isBoardLoading}
               />
             ))}
 

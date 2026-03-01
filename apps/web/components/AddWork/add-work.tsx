@@ -44,10 +44,16 @@ export function AddWork({ open, onOpenChange }: AddWorkProps) {
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
-      const endDate =
-        data.endDate && data.endTime
-          ? `${data.endDate}T${data.endTime}:00`
-          : data.endDate;
+      let endDate: string | undefined;
+      if (data.endDate && data.endTime) {
+        const localDate = new Date(`${data.endDate}T${data.endTime}:00`);
+        endDate = localDate.toISOString();
+      } else if (data.endDate) {
+        const localDate = new Date(data.endDate);
+        endDate = localDate.toISOString();
+      } else {
+        endDate = undefined;
+      }
 
       await createWork.mutateAsync({
         body: {

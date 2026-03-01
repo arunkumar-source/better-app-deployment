@@ -27,9 +27,29 @@ export function KanbanBoard() {
 
   const { mutate: updateWork } = $api.useMutation("patch", "/api/update/{id}");
 
-  const [updatingTaskId, setUpdatingTaskId] = useState<string | null>(null);
+  const [boardState, setBoardState] = useState({
+  isLoading: false,
+});
+
+const handleOperationStart = () => {
+  setBoardState(prev => ({
+    ...prev,
+    isLoading: true,
+  }));
+};
+
+const handleOperationEnd = () => {
+  setBoardState(prev => ({
+    ...prev,
+    isLoading: false,
+  }));
+};
 
   const onDragEnd = (result: DropResult) => {
+    if (boardState.isLoading) {
+      return;
+    }
+    
     if (!result.destination) {
       return;
     }
@@ -51,7 +71,7 @@ export function KanbanBoard() {
     const newStatus = destination.droppableId as WorkStatus;
 
     if (work.status !== newStatus) {
-      setUpdatingTaskId(work.id);
+      handleOperationStart();
 
       updateWork(
         {
@@ -67,7 +87,7 @@ export function KanbanBoard() {
             queryClient.invalidateQueries({ queryKey: ["get", "/api"] });
           },
           onSettled: () => {
-            setUpdatingTaskId(null);
+            handleOperationEnd();
           },
         }
       );
@@ -102,6 +122,16 @@ export function KanbanBoard() {
 
   return (
     <div className="relative min-h-[600px]">
+      {/* Board loading overlay */}
+      {boardState.isLoading && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-white bg-opacity-90">
+          <div className="flex flex-col items-center space-y-3">
+            <div className="h-8 w-8 animate-spin rounded-full border-blue-500 border-b-2" />
+            <span className="font-medium text-gray-700">Updating board...</span>
+          </div>
+        </div>
+      )}
+      
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {COLUMNS.map((col) => (
@@ -109,8 +139,10 @@ export function KanbanBoard() {
               key={col.id}
               status={col.id}
               title={col.title}
-              updatingTaskId={updatingTaskId}
               works={worksArray.filter((w) => w.status === col.id)}
+              onOperationStart={handleOperationStart}
+              onOperationEnd={handleOperationEnd}
+              isBoardLoading={boardState.isLoading}
             />
           ))}
         </div>

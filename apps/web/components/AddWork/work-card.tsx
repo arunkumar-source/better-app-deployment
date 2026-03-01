@@ -13,11 +13,15 @@ import { EditWorkSheet } from "./edit-sheet";
 export function WorkCard({
   work,
   index,
-  isUpdating = false,
+  onOperationStart,
+  onOperationEnd,
+  isBoardLoading = false,
 }: {
   work: Work;
   index: number;
-  isUpdating?: boolean;
+  onOperationStart?: () => void;
+  onOperationEnd?: () => void;
+  isBoardLoading?: boolean;
 }) {
   const queryClient = useQueryClient();
   const deleteMutation = $api.useMutation("delete", "/api/delete/{id}");
@@ -64,7 +68,7 @@ export function WorkCard({
     <Draggable
       draggableId={work.id}
       index={index}
-      isDragDisabled={work.status === "done" || isUpdating}
+      isDragDisabled={work.status === "done" || isBoardLoading}
     >
       {(provided, snapshot) => {
         return (
@@ -82,17 +86,8 @@ export function WorkCard({
                 snapshot.isDragging
                   ? "border-blue-300 bg-white shadow-xl"
                   : `${getCardColor()} hover:border-gray-400 hover:shadow-lg`
-              } ${isUpdating ? "pointer-events-none opacity-60" : ""}`}
+              } ${isBoardLoading ? "pointer-events-none opacity-60" : ""}`}
             >
-              {/* Loading overlay for this card */}
-              {isUpdating && (
-                <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-white bg-opacity-80">
-                  <div className="flex items-center space-x-2">
-                    <div className="h-4 w-4 animate-spin rounded-full border-blue-500 border-b-2" />
-                    <span className="font-medium text-xs">Updating...</span>
-                  </div>
-                </div>
-              )}
               <div {...provided.dragHandleProps}>
                 {/* Status indicators */}
                 <div className="mb-2 flex items-center gap-2">
@@ -147,11 +142,12 @@ export function WorkCard({
 
                   {/* Action buttons in top right corner */}
                   <div className="flex gap-1">
-                    <EditWorkSheet work={work}>
+                    <EditWorkSheet work={work} onOperationStart={onOperationStart} onOperationEnd={onOperationEnd}>
                       <Button
                         className="h-5 w-5 p-0 text-gray-400 hover:bg-gray-100 hover:text-black"
                         size="sm"
                         variant="ghost"
+                        disabled={isBoardLoading}
                       >
                         ✏️
                       </Button>
@@ -161,8 +157,9 @@ export function WorkCard({
                     {work.status === "todo" || work.status === "in-progress" ? (
                       <Button
                         className="h-5 w-5 p-0 text-gray-400 hover:bg-orange-50 hover:text-orange-600"
-                        disabled={updateMutation.isPending}
+                        disabled={updateMutation.isPending || isBoardLoading}
                         onClick={() => {
+                          onOperationStart?.();
                           updateMutation.mutate(
                             {
                               params: {
@@ -178,6 +175,9 @@ export function WorkCard({
                                   queryKey: ["get", "/api"],
                                 });
                               },
+                              onSettled: () => {
+                                onOperationEnd?.();
+                              },
                             }
                           );
                         }}
@@ -190,8 +190,9 @@ export function WorkCard({
                       /* Show Delete button for other statuses (done, cancelled, backlog) */
                       <Button
                         className="h-5 w-5 p-0 text-gray-400 hover:bg-red-50 hover:text-red-500"
-                        disabled={deleteMutation.isPending}
+                        disabled={deleteMutation.isPending || isBoardLoading}
                         onClick={() => {
+                          onOperationStart?.();
                           deleteMutation.mutate(
                             {
                               params: {
@@ -203,6 +204,9 @@ export function WorkCard({
                                 queryClient.invalidateQueries({
                                   queryKey: ["get", "/api"],
                                 });
+                              },
+                              onSettled: () => {
+                                onOperationEnd?.();
                               },
                             }
                           );
